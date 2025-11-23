@@ -1,0 +1,1 @@
+# cms-architecture-sample
