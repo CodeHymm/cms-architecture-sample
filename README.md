@@ -50,7 +50,7 @@ CMS2는 다음 5개의 주요 컴포넌트로 구성됩니다:
 
 > (여기에 이미지 삽입)  
 예:  
-![Data Flow](../diagrams/data-flow.png)
+![Data Flow](./dataflow.png)
 
 ---
 
