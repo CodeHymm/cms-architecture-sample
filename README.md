@@ -77,7 +77,7 @@ CMS2는 다음 5개의 주요 컴포넌트로 구성됩니다:
 - Avro 엔벨로프 생성 후 MQ Publish
 
 문서:
-- [Ingestor Design](./component-design/ingestor-design.md)
+- [Ingestor Design](./docs/ingestor.md)
 
 ---
 
@@ -87,9 +87,6 @@ CMS2는 다음 5개의 주요 컴포넌트로 구성됩니다:
 - 메시지 누락 방지
 - 장비별 우선순위 설정 가능
 
-문서:
-- [Artemis MQ Design](./component-design/artemis-mq-design.md)
-
 ---
 
 ## 3.3 Transformer
@@ -98,9 +95,6 @@ CMS2는 다음 5개의 주요 컴포넌트로 구성됩니다:
 - Aggregated Trend 생성
 - OLAP 저장 파이프라인 처리
 
-문서:
-- [Transformer Design](./component-design/transformer-design.md)
-
 ---
 
 ## 3.4 API Server
@@ -108,30 +102,14 @@ CMS2는 다음 5개의 주요 컴포넌트로 구성됩니다:
 - Trend Query API
 - WebSocket 실시간 데이터 Push
 
-문서:
-- [API Design](./component-design/api-design.md)
-
 ---
-
-## 3.5 Client UI
-- 실시간 ECG 렌더링
-- SpO2/RESP/Vital 그래프
-- Alarm 실시간 이벤트 표시
-
-문서:
-- [Client UI Design](./component-design/client-ui-design.md)
 
 ---
 
 # 4. Storage Design (OLAP / OLTP)
 
-> CMS2는 고사양 서버가 아닌 병원 온프레미스 환경에서 구동되므로, 저장 구조 최적화가 핵심입니다.
-
----
-
 ## 4.1 OLTP (PostgreSQL)
 - 환자/장비/계정/설정 저장
-- TDE 기반 암호화
 
 ---
 
@@ -180,8 +158,7 @@ LIMIT 10;
 ```
 
 문서:
-- [OLAP TTL Strategy](./storage/olap-ttl-strategy.md)
-- [Vector Search Overview](./storage/vector-search-overview.md)
+- [Vector Search Overview](./docs/vector-search-overview.md)
 
 ---
 
@@ -192,19 +169,6 @@ LIMIT 10;
 - 전송 구간 TLS 적용
 - 장비 인증 키 기반 연결 제어
 
-문서:
-- [Data Protection](./security/data-protection.md)
-
----
-
-
----
-
-# 7. Related Documents
-- [Ingestor Design](./component-design/ingestor-design.md)  
-- [Transformer Design](./component-design/transformer-design.md)  
-- [OLAP Strategy](./storage/olap-ttl-strategy.md)  
-- [HL7 Overview](./hl7/hl7-overview.md)
 
 ---
 
