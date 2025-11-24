@@ -68,8 +68,6 @@ CMS2는 다음 5개의 주요 컴포넌트로 구성됩니다:
 
 # 3. Component Responsibilities
 
-> 각 컴포넌트의 책임 분리가 명확한 것이 CMS2 아키텍처의 핵심입니다.
-
 ---
 
 ## 3.1 Ingestor
@@ -137,13 +135,53 @@ CMS2는 다음 5개의 주요 컴포넌트로 구성됩니다:
 
 ---
 
-## 4.2 OLAP (DuckDB/Parquet)
-- 1초·10초 단위 ECG Trend 저장
-- Parquet 기반 고압축 저장
-- TTL 정책으로 자동 정리
+## 4.2 OLAP (ClickHouse / Vector Index)
+
+ECG·Vital 데이터는 대용량 시계열 형태로 누적되므로, 고성능 분석이 가능한 OLAP 스토리지를 사용합니다.
+
+### 주요 기능
+- **1초 단위 ECG Trend 저장**
+- **고압축 Parquet 기반 저장 구조**
+- **TTL 정책을 통한 자동 정리(On-Prem 환경 최적화)**
+- **Vector Index를 활용한 ECG 패턴 유사도 검색 지원**
+
+### Vector Index 기반 ECG 패턴 검색
+CMS2는 ClickHouse의 Vector Index 기능을 활용하여,  
+ECG Waveform의 Embedding 벡터를 저장하고 **유사 패턴 탐색(Nearest Neighbor Search)** 기능을 제공할 수 있습니다.
+
+활용 목적:
+- 부정맥(Ectopy) 패턴 유사 사례 검색  
+- 특정 Lead(II/III)에서 나타나는 Morphology 비교  
+- 환자 간 ECG 패턴 유사도 기반 클러스터링  
+- Historical ECG 중 특정 형태와 가까운 구간 탐색  
+
+저장 방식:
+- Trend 데이터 1초 구간마다 Waveform → Embedding Vector 생성  
+- 아래 형태로 저장:
+
+```
+patient_id
+timestamp
+trend_values
+vector_embedding Float32[256]   -- ECG Embedding
+```
+
+Vector Index:
+- HNSW (Hierarchical Navigable Small World Graph)
+- Cosine Distance 기반 유사도 검색
+- On-Prem 환경에서도 실행 가능하도록 최적화
+
+### 예시 쿼리
+```sql
+SELECT *
+FROM ecg_trend
+ORDER BY cosineDistance(vector_embedding, toFloat32(array( ... ))) ASC
+LIMIT 10;
+```
 
 문서:
 - [OLAP TTL Strategy](./storage/olap-ttl-strategy.md)
+- [Vector Search Overview](./storage/vector-search-overview.md)
 
 ---
 
@@ -159,14 +197,6 @@ CMS2는 다음 5개의 주요 컴포넌트로 구성됩니다:
 
 ---
 
-# 6. Diagram Files
-
-모든 다이어그램은 `/diagrams` 폴더에서 확인 가능합니다.
-
-- cms-architecture.drawio  
-- ingest-flow.drawio  
-- transformer-flow.drawio  
-- realtime-streaming.png  
 
 ---
 
